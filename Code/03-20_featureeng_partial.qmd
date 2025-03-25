@@ -210,7 +210,11 @@ Now let's do that for all variables.
 ```{r}
 finalplots <- fe_month_sum %>%
   pivot_longer(mean_dayl.s: sum_prcp.mm) %>%
-ggplot( aes(x = value,
+  group_by(name)%>%
+  nest() %>%
+mutate(plot = map2(data, name,
+                   ~ ggplot( data = .x,
+        aes(x = value,
            y = month_abb,
            fill = stat(x)
            )
@@ -219,9 +223,11 @@ ggplot( aes(x = value,
                                rel_min_height = 0.01) +
   scale_fill_viridis_c(option = "C") +
   theme(legend.position = "none") +
-  facet_wrap(~name, scales = "free")
+  labs(x =.y)       
+  
+            ))
 
- finalplots 
+ finalplots
 ```
 
 ```{r}
